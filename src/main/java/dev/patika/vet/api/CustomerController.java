@@ -4,6 +4,7 @@ import dev.patika.vet.business.abstracts.ICustomerService;
 import dev.patika.vet.core.result.ResultData;
 import dev.patika.vet.core.utilities.ResultHelper;
 import dev.patika.vet.dto.request.customer.CustomerSaveRequest;
+import dev.patika.vet.dto.request.customer.CustomerUpdateRequest;
 import dev.patika.vet.dto.response.CursorResponse;
 import dev.patika.vet.dto.response.CustomerResponse;
 import jakarta.validation.Valid;
@@ -37,6 +38,12 @@ public class CustomerController {
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
     ) {
-        return ResultHelper.cursor(this.customerService.cursor(page,pageSize));
+        return ResultHelper.cursor(this.customerService.cursor(page, pageSize));
+    }
+
+    @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CustomerResponse> update(@Valid @RequestBody CustomerUpdateRequest customerUpdateRequest) {
+        return ResultHelper.success(this.customerService.update(customerUpdateRequest));
     }
 }

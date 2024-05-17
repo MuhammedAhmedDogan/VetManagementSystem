@@ -47,7 +47,10 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public CustomerResponse update(CustomerUpdateRequest customerUpdateRequest) {
-        return null;
+        Customer customer = this.customerRepo.findById(customerUpdateRequest.getId()).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
+        customer = this.modelMapper.forRequest().map(customerUpdateRequest, Customer.class);
+        this.customerRepo.save(customer);
+        return this.modelMapper.forResponse().map(customer, CustomerResponse.class);
     }
 
     @Override
