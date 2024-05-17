@@ -1,6 +1,7 @@
 package dev.patika.vet.api;
 
 import dev.patika.vet.business.abstracts.ICustomerService;
+import dev.patika.vet.core.result.Result;
 import dev.patika.vet.core.result.ResultData;
 import dev.patika.vet.core.utilities.ResultHelper;
 import dev.patika.vet.dto.request.customer.CustomerSaveRequest;
@@ -45,5 +46,12 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CustomerResponse> update(@Valid @RequestBody CustomerUpdateRequest customerUpdateRequest) {
         return ResultHelper.success(this.customerService.update(customerUpdateRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Result delete(@PathVariable("id") long id) {
+        this.customerService.delete(id);
+        return ResultHelper.ok();
     }
 }

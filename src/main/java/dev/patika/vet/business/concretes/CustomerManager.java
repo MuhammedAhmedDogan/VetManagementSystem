@@ -55,6 +55,8 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public boolean delete(long id) {
-        return false;
+        Customer customer = this.customerRepo.findById(id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
+        this.customerRepo.delete(customer);
+        return true;
     }
 }
