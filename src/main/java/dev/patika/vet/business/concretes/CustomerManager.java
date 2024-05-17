@@ -24,7 +24,6 @@ public class CustomerManager implements ICustomerService {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
     public CustomerResponse save(CustomerSaveRequest customerSaveRequest) {
         Customer saveCustomer = this.modelMapper.forRequest().map(customerSaveRequest, Customer.class);
