@@ -1,5 +1,6 @@
 package dev.patika.vet.core.config;
 
+import dev.patika.vet.core.exception.BadRequestException;
 import dev.patika.vet.core.exception.NotFoundException;
 import dev.patika.vet.core.result.Result;
 import dev.patika.vet.core.result.ResultData;
@@ -22,8 +23,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResultData<List<String>>> handlerValidatonErrors(MethodArgumentNotValidException e) {
+    public ResponseEntity<ResultData<List<String>>> handleValidatonErrors(MethodArgumentNotValidException e) {
         List<String> validationErrorList = e.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
         return new ResponseEntity<>(ResultHelper.validateError(validationErrorList), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(dev.patika.vet.core.exception.BadRequestException.class)
+    public ResponseEntity<Result> handleBadRequestException(BadRequestException e) {
+        return new ResponseEntity<>(ResultHelper.badRequestError(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
