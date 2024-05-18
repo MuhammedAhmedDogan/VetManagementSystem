@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/customers")
 public class CustomerController {
@@ -31,6 +33,16 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CustomerResponse> getById(@PathVariable("id") long id) {
         return ResultHelper.success(this.customerService.getById(id));
+    }
+
+    @GetMapping("/{name}/")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CursorResponse<CustomerResponse>> getByName(
+            @PathVariable("name") String name,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
+        return ResultHelper.cursor(this.customerService.getByName(name, page, pageSize));
     }
 
     @GetMapping()
