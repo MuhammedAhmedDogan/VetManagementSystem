@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "animals")
@@ -46,4 +47,7 @@ public class Animal {
     @ManyToOne()
     @JoinColumn(name = "animal_customer_id",referencedColumnName = "customer_id")
     private Customer customer;
+
+    @OneToMany(mappedBy = "animal")
+    private List<Vaccine> vaccines;
 }

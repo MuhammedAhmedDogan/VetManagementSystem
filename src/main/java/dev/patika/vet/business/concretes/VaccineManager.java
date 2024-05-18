@@ -1,0 +1,8 @@
+package dev.patika.vet.business.concretes;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class VaccineManager {
+
+}
