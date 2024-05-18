@@ -21,25 +21,19 @@ public class Customer {
     private long id;
 
     @NotNull
-    @NotEmpty
     @Column(name = "customer_name", nullable = false)
     private String name;
 
     @NotNull
-    @NotEmpty
     @Column(name = "customer_phone", nullable = false)
     private String phone;
 
     @Column(name = "customer_mail")
     private String mail;
 
-    @NotNull
-    @NotEmpty
     @Column(name = "customer_address", nullable = false)
     private String address;
 
-    @NotNull
-    @NotEmpty
     @Column(name = "customer_city", nullable = false)
     private String city;
 

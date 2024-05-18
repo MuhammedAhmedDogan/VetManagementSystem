@@ -21,27 +21,22 @@ public class Animal {
     private long id;
 
     @NotNull
-    @NotEmpty
     @Column(name = "animal_name", nullable = false)
     private String name;
 
     @NotNull
-    @NotEmpty
     @Column(name = "animal_species", nullable = false)
     private String species;
 
     @NotNull
-    @NotEmpty
     @Column(name = "animal_breed", nullable = false)
     private String breed;
 
     @NotNull
-    @NotEmpty
     @Column(name = "animal_gender", nullable = false)
     private String gender;
 
     @NotNull
-    @NotEmpty
     @Column(name = "animal_color", nullable = false)
     private String color;
 

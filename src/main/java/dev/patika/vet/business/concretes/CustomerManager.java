@@ -34,7 +34,7 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public CustomerResponse getById(long id) {
-        Customer customer = this.customerRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li kullanıcı bulunamadı"));
+        Customer customer = this.customerRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li müşteri bulunamadı"));
         return this.modelMapper.forResponse().map(customer, CustomerResponse.class);
     }
 
@@ -56,7 +56,7 @@ public class CustomerManager implements ICustomerService {
     public CustomerResponse update(CustomerUpdateRequest customerUpdateRequest) {
         Optional<Customer> controlCustomer = this.customerRepo.findById(customerUpdateRequest.getId());
         if (controlCustomer.isEmpty()) {
-            throw new NotFoundException(customerUpdateRequest.getId() + " id'li kullanıcı bulunamadı");
+            throw new NotFoundException(customerUpdateRequest.getId() + " id'li müşteri bulunamadı");
         }
         Customer customer = this.modelMapper.forRequest().map(customerUpdateRequest, Customer.class);
         this.customerRepo.save(customer);
@@ -65,7 +65,7 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public void delete(long id) {
-        Customer customer = this.customerRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li kullanıcı bulunamadı"));
+        Customer customer = this.customerRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li müşteri bulunamadı"));
         this.customerRepo.delete(customer);
     }
 }
