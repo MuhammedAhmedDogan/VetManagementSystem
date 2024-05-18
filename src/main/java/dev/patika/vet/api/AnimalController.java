@@ -43,6 +43,16 @@ public class AnimalController {
         return ResultHelper.cursor(this.animalService.getByName(name, page, pageSize));
     }
 
+    @GetMapping("/customer/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CursorResponse<AnimalResponse>> getByCustomerId(
+            @PathVariable("id") long id,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
+        return ResultHelper.cursor(this.animalService.getByCustomerId(id, page, pageSize));
+    }
+
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CursorResponse<AnimalResponse>> cursor(

@@ -9,6 +9,7 @@ import dev.patika.vet.dto.request.animal.AnimalSaveRequest;
 import dev.patika.vet.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.dto.response.AnimalResponse;
 import dev.patika.vet.entities.Animal;
+import dev.patika.vet.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +53,13 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public Page<AnimalResponse> getByCustomerId(long id, int page, int pageSize) {
-        return null;
+        Optional<Customer> controlCustomer = this.customerRepo.findById(id);
+        if (controlCustomer.isEmpty()) {
+            throw new NotFoundException(id + " id'li müşteri bulunamadı");
+        }
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Animal> animalPage = this.animalRepo.findAllByCustomerId(id, pageable);
+        return animalPage.map(animal -> this.modelMapper.forResponse().map(animal, AnimalResponse.class));
     }
 
     @Override
@@ -69,6 +76,7 @@ public class AnimalManager implements IAnimalService {
             throw new NotFoundException(animalUpdateRequest.getId() + " id'li hayvan bulunamadı");
         }
         Animal updateAnimal = this.modelMapper.forRequest().map(animalUpdateRequest, Animal.class);
+        updateAnimal.setId(animalUpdateRequest.getId());
         updateAnimal.setCustomer(this.customerRepo.findById(animalUpdateRequest.getCustomerId()).orElseThrow(() -> new NotFoundException(animalUpdateRequest.getCustomerId() + " id'li müşteri bulunamadı")));
         this.animalRepo.save(updateAnimal);
         return this.modelMapper.forResponse().map(updateAnimal, AnimalResponse.class);
