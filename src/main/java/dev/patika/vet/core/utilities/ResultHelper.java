@@ -30,6 +30,14 @@ public class ResultHelper {
         return new Result(false, msg, "400");
     }
 
+    public static Result noContent(String msg) {
+        return new Result(true, msg, "204");
+    }
+
+    public static Result noResource() {
+        return new Result(false, Msg.NO_RESOURCE, "404");
+    }
+
     public static <T> ResultData<CursorResponse<T>> cursor(Page<T> pageData) {
         CursorResponse<T> cursor = new CursorResponse<>();
         cursor.setItems(pageData.getContent());

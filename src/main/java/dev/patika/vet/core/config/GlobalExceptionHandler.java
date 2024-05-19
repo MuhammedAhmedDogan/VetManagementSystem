@@ -1,16 +1,21 @@
 package dev.patika.vet.core.config;
 
 import dev.patika.vet.core.exception.BadRequestException;
+import dev.patika.vet.core.exception.NoContentException;
 import dev.patika.vet.core.exception.NotFoundException;
 import dev.patika.vet.core.result.Result;
 import dev.patika.vet.core.result.ResultData;
+import dev.patika.vet.core.utilities.Msg;
 import dev.patika.vet.core.utilities.ResultHelper;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,5 +36,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(dev.patika.vet.core.exception.BadRequestException.class)
     public ResponseEntity<Result> handleBadRequestException(BadRequestException e) {
         return new ResponseEntity<>(ResultHelper.badRequestError(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Result> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return new ResponseEntity<>(ResultHelper.badRequestError(Msg.WRONG_TYPE), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoContentException.class)
+    public ResponseEntity<Result> handleNoContentException(NoContentException e) {
+        return new ResponseEntity<>(ResultHelper.noContent(e.getMessage()), HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Result> handleNoResourceFoundException(NoResourceFoundException e) {
+        return new ResponseEntity<>(ResultHelper.noResource(), HttpStatus.NOT_FOUND);
     }
 }
