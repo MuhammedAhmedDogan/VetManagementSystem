@@ -33,15 +33,15 @@ public class VaccineManager implements IVaccineService {
 
     @Override
     public VaccineResponse save(VaccineSaveRequest vaccineSaveRequest) {
-        if (vaccineSaveRequest.getProtectionStartDate().isAfter(vaccineSaveRequest.getProtectionFinishDate()) || vaccineSaveRequest.getProtectionStartDate().isEqual(vaccineSaveRequest.getProtectionFinishDate())) {
-            throw new BadRequestException("Aşı koruyuculuk bitiş tarihi başlangıç tarihinden daha ileri bir tarih olmalıdır");
-        }
         Vaccine saveVaccine = this.modelMapper.forRequest().map(vaccineSaveRequest, Vaccine.class);
         saveVaccine.setId(0);
         saveVaccine.setAnimal(this.animalRepo.findById(vaccineSaveRequest.getAnimalId()).orElseThrow(() -> new NotFoundException(vaccineSaveRequest.getAnimalId() + " id'li hayvan bulunamadı")));
 
-        List<Vaccine> animalVaccines = this.vaccineRepo.findAllByAnimalId(vaccineSaveRequest.getAnimalId());
+        if (vaccineSaveRequest.getProtectionStartDate().isAfter(vaccineSaveRequest.getProtectionFinishDate()) || vaccineSaveRequest.getProtectionStartDate().isEqual(vaccineSaveRequest.getProtectionFinishDate())) {
+            throw new BadRequestException("Aşı koruyuculuk bitiş tarihi başlangıç tarihinden daha ileri bir tarih olmalıdır");
+        }
 
+        List<Vaccine> animalVaccines = this.vaccineRepo.findAllByAnimalId(vaccineSaveRequest.getAnimalId());
         for (Vaccine vaccine : animalVaccines) {
             if (vaccine.getName().equalsIgnoreCase(vaccineSaveRequest.getName()) && vaccine.getCode().equalsIgnoreCase(vaccineSaveRequest.getCode())) {
                 if (vaccine.getProtectionFinishDate().isAfter(vaccineSaveRequest.getProtectionStartDate())) {
@@ -49,6 +49,7 @@ public class VaccineManager implements IVaccineService {
                 }
             }
         }
+
         this.vaccineRepo.save(saveVaccine);
         return this.modelMapper.forResponse().map(saveVaccine, VaccineResponse.class);
     }
@@ -87,6 +88,20 @@ public class VaccineManager implements IVaccineService {
         Vaccine updateVaccine = this.modelMapper.forRequest().map(vaccineUpdateRequest, Vaccine.class);
         updateVaccine.setId(vaccineUpdateRequest.getId());
         updateVaccine.setAnimal(this.animalRepo.findById(vaccineUpdateRequest.getAnimalId()).orElseThrow(() -> new NotFoundException(vaccineUpdateRequest.getAnimalId() + " id'li hayvan bulunamadı")));
+
+        if (vaccineUpdateRequest.getProtectionStartDate().isAfter(vaccineUpdateRequest.getProtectionFinishDate()) || vaccineUpdateRequest.getProtectionStartDate().isEqual(vaccineUpdateRequest.getProtectionFinishDate())) {
+            throw new BadRequestException("Aşı koruyuculuk bitiş tarihi başlangıç tarihinden daha ileri bir tarih olmalıdır");
+        }
+
+        List<Vaccine> animalVaccines = this.vaccineRepo.findAllByAnimalId(vaccineUpdateRequest.getAnimalId());
+        for (Vaccine vaccine : animalVaccines) {
+            if (vaccine.getId() != vaccineUpdateRequest.getId() && vaccine.getName().equalsIgnoreCase(vaccineUpdateRequest.getName()) && vaccine.getCode().equalsIgnoreCase(vaccineUpdateRequest.getCode())) {
+                if (vaccine.getProtectionFinishDate().isAfter(vaccineUpdateRequest.getProtectionStartDate())) {
+                    throw new BadRequestException(vaccine.getId() + " id'li aşının koruyuculuk süresi bitmemiş. Aynı aşıyı bu süre içerisinde tekrar yapamazsınız");
+                }
+            }
+        }
+
         this.vaccineRepo.save(updateVaccine);
         return this.modelMapper.forResponse().map(updateVaccine, VaccineResponse.class);
     }
