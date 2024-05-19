@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,13 @@ public class VaccineManager implements IVaccineService {
         }
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Vaccine> vaccinePage = this.vaccineRepo.findAllByAnimalId(id, pageable);
+        return vaccinePage.map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class));
+    }
+
+    @Override
+    public Page<VaccineResponse> getByDate(LocalDate firstDate, LocalDate endDate, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Vaccine> vaccinePage = this.vaccineRepo.findAllByProtectionFinishDateBetween(firstDate, endDate, pageable);
         return vaccinePage.map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class));
     }
 

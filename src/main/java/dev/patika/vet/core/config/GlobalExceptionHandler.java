@@ -7,7 +7,6 @@ import dev.patika.vet.core.result.Result;
 import dev.patika.vet.core.result.ResultData;
 import dev.patika.vet.core.utilities.Msg;
 import dev.patika.vet.core.utilities.ResultHelper;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
@@ -50,6 +50,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Result> handleNoResourceFoundException(NoResourceFoundException e) {
-        return new ResponseEntity<>(ResultHelper.noResource(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ResultHelper.noResourceError(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Result> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        return new ResponseEntity<>(ResultHelper.badRequestError(Msg.WRONG_TYPE), HttpStatus.NOT_FOUND);
     }
 }

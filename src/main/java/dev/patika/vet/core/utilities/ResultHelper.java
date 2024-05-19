@@ -34,7 +34,7 @@ public class ResultHelper {
         return new Result(true, msg, "204");
     }
 
-    public static Result noResource() {
+    public static Result noResourceError() {
         return new Result(false, Msg.NO_RESOURCE, "404");
     }
 

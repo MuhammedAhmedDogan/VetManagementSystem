@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/v1/vaccines")
 public class VaccineController {
@@ -42,6 +44,17 @@ public class VaccineController {
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
     ) {
         return ResultHelper.cursor(this.vaccineService.getByAnimalId(id, page, pageSize));
+    }
+
+    @GetMapping("/{firstDate}/{endDate}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CursorResponse<VaccineResponse>> getByDate(
+            @PathVariable("firstDate") LocalDate firstDate,
+            @PathVariable("endDate") LocalDate endDate,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
+        return ResultHelper.cursor(this.vaccineService.getByDate(firstDate, endDate, page, pageSize));
     }
 
     @GetMapping()
