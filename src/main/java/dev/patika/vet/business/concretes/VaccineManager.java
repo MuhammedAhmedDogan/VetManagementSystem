@@ -75,6 +75,9 @@ public class VaccineManager implements IVaccineService {
 
     @Override
     public Page<VaccineResponse> getByDate(LocalDate firstDate, LocalDate endDate, int page, int pageSize) {
+        if (firstDate.isAfter(endDate)) {
+            throw new BadRequestException("Girilen ikinci tarih, ilk tarihten daha ileri bir tarih olmalıdır");
+        }
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Vaccine> vaccinePage = this.vaccineRepo.findAllByProtectionFinishDateBetween(firstDate, endDate, pageable);
         return vaccinePage.map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class));
