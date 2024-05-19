@@ -44,9 +44,9 @@ public class Animal {
     private LocalDate birthDate;
 
     @ManyToOne()
-    @JoinColumn(name = "animal_customer_id",referencedColumnName = "customer_id")
+    @JoinColumn(name = "animal_customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Vaccine> vaccines;
 }

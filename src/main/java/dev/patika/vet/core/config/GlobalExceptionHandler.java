@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,11 +51,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Result> handleNoResourceFoundException(NoResourceFoundException e) {
-        return new ResponseEntity<>(ResultHelper.noResourceError(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ResultHelper.badRequestError(Msg.NO_RESOURCE), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Result> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         return new ResponseEntity<>(ResultHelper.badRequestError(Msg.WRONG_TYPE), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Result> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        return new ResponseEntity<>(ResultHelper.methodNotAllowed(e.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

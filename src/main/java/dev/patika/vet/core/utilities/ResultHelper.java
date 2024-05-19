@@ -26,16 +26,16 @@ public class ResultHelper {
         return new Result(false, msg, "404");
     }
 
+    public static Result methodNotAllowed(String msg) {
+        return new Result(false, msg, "405");
+    }
+
     public static Result badRequestError(String msg) {
         return new Result(false, msg, "400");
     }
 
     public static Result noContent(String msg) {
         return new Result(true, msg, "204");
-    }
-
-    public static Result noResourceError() {
-        return new Result(false, Msg.NO_RESOURCE, "404");
     }
 
     public static <T> ResultData<CursorResponse<T>> cursor(Page<T> pageData) {

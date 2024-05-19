@@ -36,6 +36,6 @@ public class Customer {
     @Column(name = "customer_city", nullable = false)
     private String city;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Animal> animals;
 }
