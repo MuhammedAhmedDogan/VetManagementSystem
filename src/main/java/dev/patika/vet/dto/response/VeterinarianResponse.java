@@ -7,13 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnimalResponse {
+public class VeterinarianResponse {
     private long id;
     private String name;
-    private String species;
-    private String breed;
-    private String gender;
-    private String color;
-    private long customerId;
-    private String customerName;
+    private String phone;
+    private String mail;
+    private String city;
 }

@@ -2,7 +2,6 @@ package dev.patika.vet.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -38,6 +37,6 @@ public class Customer {
     @Column(name = "customer_city", nullable = false)
     private String city;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Animal> animals;
 }

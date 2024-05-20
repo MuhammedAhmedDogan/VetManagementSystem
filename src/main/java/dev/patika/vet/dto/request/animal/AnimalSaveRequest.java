@@ -1,6 +1,5 @@
 package dev.patika.vet.dto.request.animal;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

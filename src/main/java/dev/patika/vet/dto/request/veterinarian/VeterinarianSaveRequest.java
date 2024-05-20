@@ -1,4 +1,4 @@
-package dev.patika.vet.dto.request.customer;
+package dev.patika.vet.dto.request.veterinarian;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerSaveRequest {
-    @NotNull(message = "Müşteri adı boş veya null olamaz")
+public class VeterinarianSaveRequest {
+    @NotNull(message = "Veteriner Hekim adı boş veya null olamaz")
     private String name;
 
-    @NotNull(message = "Müşteri telefonu boş veya null olamaz")
+    @NotNull(message = "Veteriner Hekim telefonu boş veya null olamaz")
     private String phone;
 
     @Email
