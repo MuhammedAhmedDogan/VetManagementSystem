@@ -1,6 +1,7 @@
 package dev.patika.vet.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -27,6 +28,7 @@ public class Customer {
     @Column(name = "customer_phone", nullable = false)
     private String phone;
 
+    @Email
     @Column(name = "customer_mail")
     private String mail;
 

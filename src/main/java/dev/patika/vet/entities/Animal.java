@@ -40,6 +40,7 @@ public class Animal {
     @Column(name = "animal_color", nullable = false)
     private String color;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "animal_birth_date")
     private LocalDate birthDate;
 

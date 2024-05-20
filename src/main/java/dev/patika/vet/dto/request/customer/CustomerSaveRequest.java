@@ -1,5 +1,6 @@
 package dev.patika.vet.dto.request.customer;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class CustomerSaveRequest {
     @NotNull(message = "Müşteri telefonu boş veya null olamaz")
     private String phone;
 
+    @Email
     private String mail;
 
     private String address;

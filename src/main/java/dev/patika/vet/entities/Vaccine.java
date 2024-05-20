@@ -27,10 +27,12 @@ public class Vaccine {
     private String code;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     @Column(name = "vaccine_protection_start_date", nullable = false)
     private LocalDate protectionStartDate;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     @Column(name = "vaccine_protection_finish_date", nullable = false)
     private LocalDate protectionFinishDate;
 
