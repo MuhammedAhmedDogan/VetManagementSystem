@@ -47,4 +47,12 @@ public class Veterinarian {
             inverseJoinColumns = {@JoinColumn(name = "available_date_id")}
     )
     private Set<AvailableDate> availableDates;
+
+    public void addAvailableDate(AvailableDate availableDate) {
+        this.availableDates.add(availableDate);
+    }
+
+    public void removeAvailableDate(AvailableDate availableDate) {
+        this.availableDates.remove(availableDate);
+    }
 }

@@ -4,6 +4,7 @@ import dev.patika.vet.business.abstracts.IVeterinarianService;
 import dev.patika.vet.core.result.Result;
 import dev.patika.vet.core.result.ResultData;
 import dev.patika.vet.core.utilities.ResultHelper;
+import dev.patika.vet.dto.request.veterinarian.VeterinarianAvailableDateRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianSaveRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianUpdateRequest;
 import dev.patika.vet.dto.response.CursorResponse;
@@ -68,6 +69,18 @@ public class VeterinarianController {
     @ResponseStatus(HttpStatus.OK)
     public ResultData<VeterinarianResponse> update(@Valid @RequestBody VeterinarianUpdateRequest veterinarianUpdateRequest) {
         return ResultHelper.success(this.veterinarianService.update(veterinarianUpdateRequest));
+    }
+
+    @PutMapping("/add-available-date")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<VeterinarianResponse> addAvailableDate(@Valid @RequestBody VeterinarianAvailableDateRequest veterinarianAvailableDateRequest) {
+        return ResultHelper.success(this.veterinarianService.addAvailableDate(veterinarianAvailableDateRequest));
+    }
+
+    @PutMapping("/remove-available-date")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<VeterinarianResponse> removeAvailableDate(@Valid @RequestBody VeterinarianAvailableDateRequest veterinarianAvailableDateRequest) {
+        return ResultHelper.success(this.veterinarianService.addAvailableDate(veterinarianAvailableDateRequest));
     }
 
     @DeleteMapping("/{id}")

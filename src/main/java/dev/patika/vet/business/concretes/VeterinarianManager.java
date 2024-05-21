@@ -2,9 +2,11 @@ package dev.patika.vet.business.concretes;
 
 import dev.patika.vet.business.abstracts.IVeterinarianService;
 import dev.patika.vet.core.config.modelMapper.IModelMapperService;
+import dev.patika.vet.core.exception.BadRequestException;
 import dev.patika.vet.core.exception.NotFoundException;
 import dev.patika.vet.dao.AvailableDateRepo;
 import dev.patika.vet.dao.VeterinarianRepo;
+import dev.patika.vet.dto.request.veterinarian.VeterinarianAvailableDateRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianSaveRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianUpdateRequest;
 import dev.patika.vet.dto.response.VeterinarianResponse;
@@ -77,6 +79,31 @@ public class VeterinarianManager implements IVeterinarianService {
         Veterinarian veterinarian = this.modelMapper.forRequest().map(veterinarianUpdateRequest, Veterinarian.class);
         this.veterinarianRepo.save(veterinarian);
         return this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class);
+    }
+
+    @Override
+    public VeterinarianResponse addAvailableDate(VeterinarianAvailableDateRequest veterinarianAvailableDateRequest) {
+        Optional<Veterinarian> controlVeterinarian = this.veterinarianRepo.findById(veterinarianAvailableDateRequest.getVeterinarianId());
+        if (controlVeterinarian.isEmpty()) {
+            throw new NotFoundException(veterinarianAvailableDateRequest.getVeterinarianId() + " id'li veteriner hekim bulunamadı");
+        }
+        Veterinarian updateVeterinarian = controlVeterinarian.get();
+        for (AvailableDate availableDate : updateVeterinarian.getAvailableDates()) {
+            if (availableDate.getAvailableDate().isEqual(veterinarianAvailableDateRequest.getAvailableDate())) {
+                throw new BadRequestException(availableDate.getAvailableDate() + " tarihi " + veterinarianAvailableDateRequest.getVeterinarianId() + " id'li veteriner hekim için zaten sistemde kayıtlı");
+            }
+        }
+        Optional<AvailableDate> controlAvailableDate = this.availableDateRepo.findByAvailableDate(veterinarianAvailableDateRequest.getAvailableDate());
+        if (controlAvailableDate.isEmpty()) {
+            AvailableDate newAvailableDate = new AvailableDate();
+            newAvailableDate.setAvailableDate(veterinarianAvailableDateRequest.getAvailableDate());
+            this.availableDateRepo.save(newAvailableDate);
+        }
+        controlAvailableDate = this.availableDateRepo.findByAvailableDate(veterinarianAvailableDateRequest.getAvailableDate());
+        AvailableDate veterinarianAvailableDate = controlAvailableDate.get();
+        updateVeterinarian.addAvailableDate(veterinarianAvailableDate);
+        this.veterinarianRepo.save(updateVeterinarian);
+        return this.modelMapper.forResponse().map(updateVeterinarian, VeterinarianResponse.class);
     }
 
     @Override

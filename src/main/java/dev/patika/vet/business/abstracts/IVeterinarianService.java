@@ -1,5 +1,6 @@
 package dev.patika.vet.business.abstracts;
 
+import dev.patika.vet.dto.request.veterinarian.VeterinarianAvailableDateRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianSaveRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianUpdateRequest;
 import dev.patika.vet.dto.response.VeterinarianResponse;
@@ -21,6 +22,8 @@ public interface IVeterinarianService {
     Page<VeterinarianResponse> cursor(int page, int pageSize);
 
     VeterinarianResponse update(VeterinarianUpdateRequest veterinarianUpdateRequest);
+
+    VeterinarianResponse addAvailableDate(VeterinarianAvailableDateRequest veterinarianAvailableDateRequest);
 
     void delete(long id);
 }
