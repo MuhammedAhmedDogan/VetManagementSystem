@@ -9,6 +9,7 @@ import dev.patika.vet.dao.VeterinarianRepo;
 import dev.patika.vet.dto.request.availableDate.AvailableDateSaveRequest;
 import dev.patika.vet.dto.request.availableDate.AvailableDateUpdateRequest;
 import dev.patika.vet.dto.response.AvailableDateResponse;
+import dev.patika.vet.dto.response.VeterinarianResponse;
 import dev.patika.vet.entities.AvailableDate;
 import dev.patika.vet.entities.Veterinarian;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AvailableDateManager implements IAvailableDateService {
@@ -38,13 +41,13 @@ public class AvailableDateManager implements IAvailableDateService {
         }
         AvailableDate saveAvailableDate = this.modelMapper.forRequest().map(availableDateSaveRequest, AvailableDate.class);
         this.availableDateRepo.save(saveAvailableDate);
-        return this.modelMapper.forResponse().map(saveAvailableDate, AvailableDateResponse.class);
+        return this.convertToAvailableDateResponse(saveAvailableDate);
     }
 
     @Override
     public AvailableDateResponse getById(long id) {
         AvailableDate availableDate = this.availableDateRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li uygun tarih bulunamadı"));
-        return this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class);
+        return this.convertToAvailableDateResponse(availableDate);
     }
 
     @Override
@@ -55,14 +58,16 @@ public class AvailableDateManager implements IAvailableDateService {
         }
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<AvailableDate> availableDatePage = this.availableDateRepo.findAllByVeterinariansId(id, pageable);
-        return availableDatePage.map(availableDate -> this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class));
+        Page<AvailableDateResponse> availableDateResponses = availableDatePage.map(availableDate -> this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class));
+
+        return availableDatePage.map(this::convertToAvailableDateResponse);
     }
 
     @Override
     public Page<AvailableDateResponse> cursor(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<AvailableDate> availableDatePage = this.availableDateRepo.findAll(pageable);
-        return availableDatePage.map(availableDate -> this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class));
+        return availableDatePage.map(this::convertToAvailableDateResponse);
     }
 
     @Override
@@ -77,12 +82,24 @@ public class AvailableDateManager implements IAvailableDateService {
         }
         AvailableDate availableDate = this.modelMapper.forRequest().map(availableDateUpdateRequest, AvailableDate.class);
         this.availableDateRepo.save(availableDate);
-        return this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class);
+        return this.convertToAvailableDateResponse(availableDate);
     }
 
     @Override
     public void delete(long id) {
         AvailableDate availableDate = this.availableDateRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li tarih bulunamadı"));
         this.availableDateRepo.delete(availableDate);
+    }
+
+    private AvailableDateResponse convertToAvailableDateResponse(AvailableDate availableDate) {
+        AvailableDateResponse response = this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class);
+        if (availableDate.getVeterinarians() != null) {
+            response.setVeterinarians(availableDate.getVeterinarians().stream()
+                    .map(vet -> modelMapper.forResponse().map(vet, VeterinarianResponse.class))
+                    .collect(Collectors.toSet()));
+        } else {
+            response.setVeterinarians(Collections.emptySet());
+        }
+        return response;
     }
 }
