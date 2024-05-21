@@ -25,5 +25,7 @@ public interface IVeterinarianService {
 
     VeterinarianResponse addAvailableDate(VeterinarianAvailableDateRequest veterinarianAvailableDateRequest);
 
+    VeterinarianResponse removeAvailableDate(VeterinarianAvailableDateRequest veterinarianAvailableDateRequest);
+
     void delete(long id);
 }

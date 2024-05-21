@@ -80,7 +80,7 @@ public class VeterinarianController {
     @PutMapping("/remove-available-date")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<VeterinarianResponse> removeAvailableDate(@Valid @RequestBody VeterinarianAvailableDateRequest veterinarianAvailableDateRequest) {
-        return ResultHelper.success(this.veterinarianService.addAvailableDate(veterinarianAvailableDateRequest));
+        return ResultHelper.success(this.veterinarianService.removeAvailableDate(veterinarianAvailableDateRequest));
     }
 
     @DeleteMapping("/{id}")

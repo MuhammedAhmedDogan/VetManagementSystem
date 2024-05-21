@@ -107,6 +107,35 @@ public class VeterinarianManager implements IVeterinarianService {
     }
 
     @Override
+    public VeterinarianResponse removeAvailableDate(VeterinarianAvailableDateRequest veterinarianAvailableDateRequest) {
+        Optional<Veterinarian> controlVeterinarian = this.veterinarianRepo.findById(veterinarianAvailableDateRequest.getVeterinarianId());
+        if (controlVeterinarian.isEmpty()) {
+            throw new NotFoundException(veterinarianAvailableDateRequest.getVeterinarianId() + " id'li veteriner hekim bulunamadı");
+        }
+        Veterinarian updateVeterinarian = controlVeterinarian.get();
+
+        Optional<AvailableDate> controlAvailableDate = this.availableDateRepo.findByAvailableDate(veterinarianAvailableDateRequest.getAvailableDate());
+        if (controlAvailableDate.isEmpty()) {
+            throw new NotFoundException("Kaldırılmak istenen "+veterinarianAvailableDateRequest.getAvailableDate() + " tarihi herhangi bir hekim için sistemde zaten kayıtlı değil");
+        }
+
+        boolean isDateAlreadyRegistered = false;
+        for (AvailableDate availableDate : updateVeterinarian.getAvailableDates()) {
+            if (availableDate.getAvailableDate().isEqual(veterinarianAvailableDateRequest.getAvailableDate())) {
+                isDateAlreadyRegistered = true;
+            }
+        }
+        if (!isDateAlreadyRegistered) {
+            throw new NotFoundException("Kaldırılmak istenen "+veterinarianAvailableDateRequest.getAvailableDate() + " tarihi " + veterinarianAvailableDateRequest.getVeterinarianId() + " id'li veteriner hekim için sistemde zaten kayıtlı değil");
+        }
+
+        AvailableDate veterinarianAvailableDate = controlAvailableDate.get();
+        updateVeterinarian.removeAvailableDate(veterinarianAvailableDate);
+        this.veterinarianRepo.save(updateVeterinarian);
+        return this.modelMapper.forResponse().map(updateVeterinarian, VeterinarianResponse.class);
+    }
+
+    @Override
     public void delete(long id) {
         Veterinarian veterinarian = this.veterinarianRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li veteriner hekim bulunamadı"));
         this.veterinarianRepo.delete(veterinarian);
