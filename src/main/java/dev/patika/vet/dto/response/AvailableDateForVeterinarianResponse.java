@@ -5,13 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AvailableDateResponse {
-    private long id;
+public class AvailableDateForVeterinarianResponse {
     private LocalDate availableDate;
-    private Set<VeterinarianForAvailableDateResponse> veterinarians;
 }

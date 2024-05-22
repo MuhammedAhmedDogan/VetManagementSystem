@@ -9,6 +9,7 @@ import dev.patika.vet.dao.VeterinarianRepo;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianAvailableDateRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianSaveRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianUpdateRequest;
+import dev.patika.vet.dto.response.AvailableDateForVeterinarianResponse;
 import dev.patika.vet.dto.response.VeterinarianResponse;
 import dev.patika.vet.entities.AvailableDate;
 import dev.patika.vet.entities.Veterinarian;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VeterinarianManager implements IVeterinarianService {
@@ -36,13 +39,13 @@ public class VeterinarianManager implements IVeterinarianService {
     public VeterinarianResponse save(VeterinarianSaveRequest veterinarianSaveRequest) {
         Veterinarian saveVeterinarian = this.modelMapper.forRequest().map(veterinarianSaveRequest, Veterinarian.class);
         this.veterinarianRepo.save(saveVeterinarian);
-        return this.modelMapper.forResponse().map(saveVeterinarian, VeterinarianResponse.class);
+        return this.convertToVeterinarianResponse(saveVeterinarian);
     }
 
     @Override
     public VeterinarianResponse getById(long id) {
         Veterinarian veterinarian = this.veterinarianRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li veteriner hekim bulunamadı"));
-        return this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class);
+        return this.convertToVeterinarianResponse(veterinarian);
     }
 
     @Override
@@ -53,21 +56,21 @@ public class VeterinarianManager implements IVeterinarianService {
         }
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Veterinarian> veterinarianPage = this.veterinarianRepo.findAllByAvailableDatesId(controlAvailableDate.get().getId(), pageable);
-        return veterinarianPage.map(veterinarian -> this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class));
+        return veterinarianPage.map(this::convertToVeterinarianResponse);
     }
 
     @Override
     public Page<VeterinarianResponse> getByName(String name, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Veterinarian> veterinarianPage = this.veterinarianRepo.findAllByName(name, pageable);
-        return veterinarianPage.map(veterinarian -> this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class));
+        return veterinarianPage.map(this::convertToVeterinarianResponse);
     }
 
     @Override
     public Page<VeterinarianResponse> cursor(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Veterinarian> veterinarianPage = this.veterinarianRepo.findAll(pageable);
-        return veterinarianPage.map(veterinarian -> this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class));
+        return veterinarianPage.map(this::convertToVeterinarianResponse);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class VeterinarianManager implements IVeterinarianService {
         }
         Veterinarian veterinarian = this.modelMapper.forRequest().map(veterinarianUpdateRequest, Veterinarian.class);
         this.veterinarianRepo.save(veterinarian);
-        return this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class);
+        return this.convertToVeterinarianResponse(veterinarian);
     }
 
     @Override
@@ -103,7 +106,7 @@ public class VeterinarianManager implements IVeterinarianService {
         AvailableDate veterinarianAvailableDate = controlAvailableDate.get();
         updateVeterinarian.addAvailableDate(veterinarianAvailableDate);
         this.veterinarianRepo.save(updateVeterinarian);
-        return this.modelMapper.forResponse().map(updateVeterinarian, VeterinarianResponse.class);
+        return this.convertToVeterinarianResponse(updateVeterinarian);
     }
 
     @Override
@@ -116,7 +119,7 @@ public class VeterinarianManager implements IVeterinarianService {
 
         Optional<AvailableDate> controlAvailableDate = this.availableDateRepo.findByAvailableDate(veterinarianAvailableDateRequest.getAvailableDate());
         if (controlAvailableDate.isEmpty()) {
-            throw new NotFoundException("Kaldırılmak istenen "+veterinarianAvailableDateRequest.getAvailableDate() + " tarihi herhangi bir hekim için sistemde zaten kayıtlı değil");
+            throw new NotFoundException("Kaldırılmak istenen " + veterinarianAvailableDateRequest.getAvailableDate() + " tarihi herhangi bir hekim için sistemde zaten kayıtlı değil");
         }
 
         boolean isDateAlreadyRegistered = false;
@@ -126,18 +129,30 @@ public class VeterinarianManager implements IVeterinarianService {
             }
         }
         if (!isDateAlreadyRegistered) {
-            throw new NotFoundException("Kaldırılmak istenen "+veterinarianAvailableDateRequest.getAvailableDate() + " tarihi " + veterinarianAvailableDateRequest.getVeterinarianId() + " id'li veteriner hekim için sistemde zaten kayıtlı değil");
+            throw new NotFoundException("Kaldırılmak istenen " + veterinarianAvailableDateRequest.getAvailableDate() + " tarihi " + veterinarianAvailableDateRequest.getVeterinarianId() + " id'li veteriner hekim için sistemde zaten kayıtlı değil");
         }
 
         AvailableDate veterinarianAvailableDate = controlAvailableDate.get();
         updateVeterinarian.removeAvailableDate(veterinarianAvailableDate);
         this.veterinarianRepo.save(updateVeterinarian);
-        return this.modelMapper.forResponse().map(updateVeterinarian, VeterinarianResponse.class);
+        return this.convertToVeterinarianResponse(updateVeterinarian);
     }
 
     @Override
     public void delete(long id) {
         Veterinarian veterinarian = this.veterinarianRepo.findById(id).orElseThrow(() -> new NotFoundException(id + " id'li veteriner hekim bulunamadı"));
         this.veterinarianRepo.delete(veterinarian);
+    }
+
+    private VeterinarianResponse convertToVeterinarianResponse(Veterinarian veterinarian) {
+        VeterinarianResponse response = this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class);
+        if (veterinarian.getAvailableDates() != null) {
+            response.setAvailableDates(veterinarian.getAvailableDates().stream()
+                    .map(availableDate -> modelMapper.forResponse().map(availableDate, AvailableDateForVeterinarianResponse.class))
+                    .collect(Collectors.toSet()));
+        } else {
+            response.setAvailableDates(Collections.emptySet());
+        }
+        return response;
     }
 }

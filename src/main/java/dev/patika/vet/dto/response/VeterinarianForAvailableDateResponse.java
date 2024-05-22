@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AvailableDateResponse {
+public class VeterinarianForAvailableDateResponse {
     private long id;
-    private LocalDate availableDate;
-    private Set<VeterinarianForAvailableDateResponse> veterinarians;
+    private String name;
+    private String phone;
+    private String mail;
+    private String city;
 }
