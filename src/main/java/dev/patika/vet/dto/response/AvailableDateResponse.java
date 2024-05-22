@@ -13,5 +13,5 @@ import java.util.Set;
 public class AvailableDateResponse {
     private long id;
     private LocalDate availableDate;
-    private Set<VeterinarianForAvailableDateResponse> veterinarians;
+    private Set<VeterinarianForListResponse> veterinarians;
 }

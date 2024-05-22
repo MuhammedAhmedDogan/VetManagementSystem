@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VeterinarianForAvailableDateResponse {
+public class VeterinarianForListResponse {
     private long id;
     private String name;
     private String phone;

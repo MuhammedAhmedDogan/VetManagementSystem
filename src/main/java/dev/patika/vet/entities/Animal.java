@@ -49,4 +49,7 @@ public class Animal {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "animal", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Vaccine> vaccines;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "animal", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Appointment> appointments;
 }

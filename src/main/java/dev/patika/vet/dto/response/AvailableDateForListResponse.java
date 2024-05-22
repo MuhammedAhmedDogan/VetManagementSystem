@@ -9,6 +9,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AvailableDateForVeterinarianResponse {
+public class AvailableDateForListResponse {
     private LocalDate availableDate;
 }

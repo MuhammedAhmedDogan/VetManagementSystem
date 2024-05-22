@@ -9,8 +9,7 @@ import dev.patika.vet.dao.VeterinarianRepo;
 import dev.patika.vet.dto.request.availableDate.AvailableDateSaveRequest;
 import dev.patika.vet.dto.request.availableDate.AvailableDateUpdateRequest;
 import dev.patika.vet.dto.response.AvailableDateResponse;
-import dev.patika.vet.dto.response.VeterinarianForAvailableDateResponse;
-import dev.patika.vet.dto.response.VeterinarianResponse;
+import dev.patika.vet.dto.response.VeterinarianForListResponse;
 import dev.patika.vet.entities.AvailableDate;
 import dev.patika.vet.entities.Veterinarian;
 import org.springframework.data.domain.Page;
@@ -96,7 +95,7 @@ public class AvailableDateManager implements IAvailableDateService {
         AvailableDateResponse response = this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class);
         if (availableDate.getVeterinarians() != null) {
             response.setVeterinarians(availableDate.getVeterinarians().stream()
-                    .map(vet -> modelMapper.forResponse().map(vet, VeterinarianForAvailableDateResponse.class))
+                    .map(vet -> modelMapper.forResponse().map(vet, VeterinarianForListResponse.class))
                     .collect(Collectors.toSet()));
         } else {
             response.setVeterinarians(Collections.emptySet());

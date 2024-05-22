@@ -9,7 +9,7 @@ import dev.patika.vet.dao.VeterinarianRepo;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianAvailableDateRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianSaveRequest;
 import dev.patika.vet.dto.request.veterinarian.VeterinarianUpdateRequest;
-import dev.patika.vet.dto.response.AvailableDateForVeterinarianResponse;
+import dev.patika.vet.dto.response.AvailableDateForListResponse;
 import dev.patika.vet.dto.response.VeterinarianResponse;
 import dev.patika.vet.entities.AvailableDate;
 import dev.patika.vet.entities.Veterinarian;
@@ -148,7 +148,7 @@ public class VeterinarianManager implements IVeterinarianService {
         VeterinarianResponse response = this.modelMapper.forResponse().map(veterinarian, VeterinarianResponse.class);
         if (veterinarian.getAvailableDates() != null) {
             response.setAvailableDates(veterinarian.getAvailableDates().stream()
-                    .map(availableDate -> modelMapper.forResponse().map(availableDate, AvailableDateForVeterinarianResponse.class))
+                    .map(availableDate -> modelMapper.forResponse().map(availableDate, AvailableDateForListResponse.class))
                     .collect(Collectors.toSet()));
         } else {
             response.setAvailableDates(Collections.emptySet());

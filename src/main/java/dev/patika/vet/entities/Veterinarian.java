@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,6 +48,9 @@ public class Veterinarian {
             inverseJoinColumns = {@JoinColumn(name = "available_date_id")}
     )
     private Set<AvailableDate> availableDates;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "veterinarian", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Appointment> appointments;
 
     public void addAvailableDate(AvailableDate availableDate) {
         this.availableDates.add(availableDate);
