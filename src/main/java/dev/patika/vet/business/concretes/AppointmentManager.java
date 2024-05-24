@@ -160,7 +160,7 @@ public class AppointmentManager implements IAppointmentService {
         controlAppointment = this.appointmentRepo.findByAppointmentDateAndAnimalId(appointmentUpdateRequest.getAppointmentDate(), appointmentUpdateRequest.getAnimalId());
         if (controlAppointment.isPresent()) {
             if (appointmentUpdateRequest.getId() != controlAppointment.get().getId()) {
-                throw new BadRequestException("Girilen tarihte " + appointmentUpdateRequest.getVeterinarianId() + " id'li veteriner hekimin başka bir randevusu mevcuttur");
+                throw new BadRequestException("Girilen tarihte " + appointmentUpdateRequest.getAnimalId() + " id'li hayvan için zaten bir randevu bulunmaktadır");
             }
         }
 
