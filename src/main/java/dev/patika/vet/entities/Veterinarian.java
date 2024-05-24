@@ -49,7 +49,7 @@ public class Veterinarian {
     )
     private Set<AvailableDate> availableDates;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "veterinarian", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "veterinarian", cascade = CascadeType.REMOVE)
     private List<Appointment> appointments;
 
     public void addAvailableDate(AvailableDate availableDate) {
