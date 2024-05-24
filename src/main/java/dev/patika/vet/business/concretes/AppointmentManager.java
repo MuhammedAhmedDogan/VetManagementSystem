@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -89,6 +90,34 @@ public class AppointmentManager implements IAppointmentService {
         }
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Appointment> appointmentPage = this.appointmentRepo.findAllByVeterinarianId(id, pageable);
+        return appointmentPage.map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class));
+    }
+
+    @Override
+    public Page<AppointmentResponse> getByVeterinarianIdAndDate(long id, LocalDateTime firstDate, LocalDateTime endDate, int page, int pageSize) {
+        if (firstDate.isAfter(endDate)) {
+            throw new BadRequestException("Girilen ikinci tarih, ilk tarihten daha ileri bir tarih olmalıdır");
+        }
+        Optional<Veterinarian> controlVeterinarian = this.veterinarianRepo.findById(id);
+        if (controlVeterinarian.isEmpty()) {
+            throw new NotFoundException(id + " id'li veteriner hekim bulunamadı");
+        }
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Appointment> appointmentPage = this.appointmentRepo.findAllByVeterinarianIdAndAppointmentDateBetween(id, firstDate, endDate, pageable);
+        return appointmentPage.map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class));
+    }
+
+    @Override
+    public Page<AppointmentResponse> getByAnimalIdAndDate(long id, LocalDateTime firstDate, LocalDateTime endDate, int page, int pageSize) {
+        if (firstDate.isAfter(endDate)) {
+            throw new BadRequestException("Girilen ikinci tarih, ilk tarihten daha ileri bir tarih olmalıdır");
+        }
+        Optional<Animal> controlAnimal = this.animalRepo.findById(id);
+        if (controlAnimal.isEmpty()) {
+            throw new NotFoundException(id + " id'li hayvan bulunamadı");
+        }
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Appointment> appointmentPage = this.appointmentRepo.findAllByAnimalIdAndAppointmentDateBetween(id, firstDate, endDate, pageable);
         return appointmentPage.map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class));
     }
 

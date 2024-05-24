@@ -18,4 +18,8 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
     Page<Appointment> findAllByAnimalId(long id, Pageable pageable);
 
     Page<Appointment> findAllByVeterinarianId(long id, Pageable pageable);
+
+    Page<Appointment> findAllByVeterinarianIdAndAppointmentDateBetween(long id, LocalDateTime firstDate, LocalDateTime endDate, Pageable pageable);
+
+    Page<Appointment> findAllByAnimalIdAndAppointmentDateBetween(long id, LocalDateTime firstDate, LocalDateTime endDate, Pageable pageable);
 }

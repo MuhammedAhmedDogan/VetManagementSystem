@@ -12,6 +12,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/v1/appointments")
 public class AppointmentController {
@@ -52,6 +55,32 @@ public class AppointmentController {
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
     ) {
         return ResultHelper.cursor(this.appointmentService.getByVeterinarianId(id, page, pageSize));
+    }
+
+    @GetMapping("/vet/{id}/{firstDate}/{endDate}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CursorResponse<AppointmentResponse>> getByVeterinarianIdAndDate(
+            @PathVariable("id") long id,
+            @PathVariable("firstDate") LocalDate firstDate,
+            @PathVariable("endDate") LocalDate endDate,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
+
+        return ResultHelper.cursor(this.appointmentService.getByVeterinarianIdAndDate(id, firstDate.atStartOfDay(), endDate.atTime(23, 59, 59), page, pageSize));
+    }
+
+    @GetMapping("/animal/{id}/{firstDate}/{endDate}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CursorResponse<AppointmentResponse>> getByAnimalIdAndDate(
+            @PathVariable("id") long id,
+            @PathVariable("firstDate") LocalDate firstDate,
+            @PathVariable("endDate") LocalDate endDate,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
+
+        return ResultHelper.cursor(this.appointmentService.getByAnimalIdAndDate(id, firstDate.atStartOfDay(), endDate.atTime(23, 59, 59), page, pageSize));
     }
 
     @GetMapping()
