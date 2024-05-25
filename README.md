@@ -22,4 +22,15 @@ Swagger<br>
 ## Entity Relations
 
 ## API Documentation
-## Customer Management
+
+### Customer Management
+
+### Animal Management
+
+### Vaccine Management
+
+### Veterinarian Management
+
+### Available Date Management
+
+### Appointment Management
