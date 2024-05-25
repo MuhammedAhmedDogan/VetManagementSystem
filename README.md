@@ -20,17 +20,18 @@ Modelmapper<br>
 Swagger<br>
 
 ## Entity Relations
-
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/VetUML.png)
 ## API Documentation
 
 ### Customer Management
-
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/customer_endpoints.png)
 ### Animal Management
-
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/animal_endpoints.png)
 ### Vaccine Management
-
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/vaccine_endpoints.png)
 ### Veterinarian Management
-
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/veterinarian_endpoints.png)
 ### Available Date Management
-
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/available_date_endpoints.png)
 ### Appointment Management
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/appointment_endpoints.png)
