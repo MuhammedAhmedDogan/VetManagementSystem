@@ -30,7 +30,7 @@ Swagger<br>
 ### Vaccine Management
 ![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/vaccine_endpoints.png)
 ### Veterinarian Management
-![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/veterinarian_endpoints.png)
+![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/vet_endpoints.png)
 ### Available Date Management
 ![Örnek Görsel:](https://github.com/MuhammedAhmedDogan/VetManagementSystem/blob/master/pictures/available_date_endpoints.png)
 ### Appointment Management
